@@ -45,8 +45,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     updateTodayWeather((TodayWeather) msg.obj);
                     break;
                 default:
-                    break; }
-        } };
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +175,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                 eventType = xmlPullParser.next();
                                 //Log.d("myWeather", "pm25:    " + xmlPullParser.getText());
                                 todayWeather.setPm25(xmlPullParser.getText());
+
                             } else if (xmlPullParser.getName().equals("quality")) {
                                 eventType = xmlPullParser.next();
                                 //Log.d("myWeather", "quality:    " + xmlPullParser.getText());
@@ -261,6 +264,88 @@ public class MainActivity extends Activity implements View.OnClickListener {
         temperatureTv.setText(todayWeather.getHigh()+"~"+todayWeather.getLow());
         climateTv.setText(todayWeather.getType());
         windTv.setText("风力:"+todayWeather.getFengli());
+
+        if(todayWeather.getPm25()!=null) {
+            int pm_25 = Integer.parseInt(todayWeather.getPm25());
+            if (pm_25 <= 50) {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_0_50);
+            } else if (pm_25 >= 51 && pm_25 <= 100) {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_51_100);
+            } else if (pm_25 >= 101 && pm_25 <= 150) {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_101_150);
+            } else if (pm_25 >= 151 && pm_25 <= 200) {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_151_200);
+            } else if (pm_25 >= 201 && pm_25 <= 300) {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_201_300);
+            }
+        }
+
+        if(todayWeather.getType()!=null) {
+            switch (todayWeather.getType()) {
+                case "晴":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_qing);
+                    break;
+                case "阴":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_yin);
+                    break;
+                case "雾":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_wu);
+                    break;
+                case "多云":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_duoyun);
+                    break;
+                case "小雨":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_xiaoyu);
+                    break;
+                case "中雨":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_zhongyu);
+                    break;
+                case "大雨":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_dayu);
+                    break;
+                case "阵雨":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_zhenyu);
+                    break;
+                case "雷阵雨":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_leizhenyu);
+                    break;
+                case "雷阵雨加暴":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_leizhenyubingbao);
+                    break;
+                case "暴雨":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_baoyu);
+                    break;
+                case "大暴雨":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_dabaoyu);
+                    break;
+                case "特大暴雨":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_tedabaoyu);
+                    break;
+                case "阵雪":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_zhenxue);
+                    break;
+                case "暴雪":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_baoxue);
+                    break;
+                case "大雪":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_daxue);
+                    break;
+                case "小雪":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_xiaoxue);
+                    break;
+                case "雨夹雪":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_yujiaxue);
+                    break;
+                case "中雪":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_zhongxue);
+                    break;
+                case "沙尘暴":
+                    weatherImg.setImageResource(R.drawable.biz_plugin_weather_shachenbao);
+                    break;
+                default:
+                    break;
+            }
+        }
         Toast.makeText(MainActivity.this,"更新成功!",Toast.LENGTH_SHORT).show();
     }
 
