@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     
@@ -41,14 +42,40 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_top"
+        tools:ignore="DuplicateIds"
+        android:id="@+id/search_city">
+
+        <EditText
+            android:id="@+id/select_city"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/contact_search_box_edittext_keyword_background"
+            android:drawableLeft="@drawable/magnifying_glass"
+            android:drawablePadding="6.0dp"
+            android:hint="搜索全国城市（中文）"
+            android:singleLine="true"
+            android:textColor="#ff000000"
+            android:textColorHint="#ffcccccc"
+            android:textSize="15.0dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title_top">
+        android:layout_below="@id/search_city">
+
         <ListView
+            android:id="@+id/title_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/title_list"
-            android:background="#ffffff"></ListView>
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="#ffffff"
+            android:choiceMode="singleChoice"></ListView>
     </RelativeLayout>
     
 
