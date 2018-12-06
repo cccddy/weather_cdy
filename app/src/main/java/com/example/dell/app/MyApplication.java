@@ -1,11 +1,11 @@
-package com.example.dell.app;
+package com.yorkyu.weathervision.app;
 
 import android.app.Application;
 import android.os.Environment;
 import android.util.Log;
 
-import com.example.dell.bean.City;
-import com.example.dell.db.CityDB;
+import com.yorkyu.weathervision.db.CityDB;
+import com.yorkyu.weathervision.model.City;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,30 +14,52 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-//需要在AndroidManifest.xml中注册
-public class MyApplication extends Application{
+public class MyApplication extends Application {
     private static final String TAG = "MyAPP";
 
     private static MyApplication mApplication;
-
     private CityDB mCityDB;
-
     private List<City> mCityList;
-
     @Override
-    public void onCreate(){
+    public void onCreate() {
         super.onCreate();
-        Log.d(TAG,"MyApplication->onCreate");
+
+        Log.d(TAG, "MyApplication->onCreate: ");
 
         mApplication = this;
-
         mCityDB = openCityDB();
-
         initCityList();
     }
 
-    public static MyApplication getInstance(){
-        return  mApplication;
+    private void initCityList() {
+        mCityList = new ArrayList<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                prepareCityList();
+            }
+        }).start();
+    }
+
+    private boolean prepareCityList() {
+        mCityList = mCityDB.getAllCity();
+        int i = 0;
+        for (City city : mCityList) {
+            i++;
+            String cityName = city.getCity();
+            String cityCode = city.getNumber();
+            Log.d(TAG, cityCode+ ":" + cityName);
+        }
+        Log.d(TAG, "i=" + i);
+        return true;
+    }
+
+    public static MyApplication getInstance() {
+        return mApplication;
+    }
+
+    public List<City> getCityList() {
+        return mCityList;
     }
 
     private CityDB openCityDB() {
@@ -48,21 +70,19 @@ public class MyApplication extends Application{
                 + File.separator
                 + CityDB.CITY_DB_NAME;
         File db = new File(path);
-        Log.d(TAG,path);
+        Log.d(TAG, path);
         if (!db.exists()) {
-
             String pathfolder = "/data"
                     + Environment.getDataDirectory().getAbsolutePath()
                     + File.separator + getPackageName()
                     + File.separator + "databases1"
                     + File.separator;
-
             File dirFirstFolder = new File(pathfolder);
-            if(!dirFirstFolder.exists()){
+            if (!dirFirstFolder.exists()) {
                 dirFirstFolder.mkdirs();
-                Log.i("MyApp","mkdirs");
+                Log.i("MyApp", "mkdirs");
             }
-            Log.i("MyApp","db is not exists");
+            Log.i("MyApp", "db is not exists");
             try {
                 InputStream is = getAssets().open("city.db");
                 FileOutputStream fos = new FileOutputStream(db);
@@ -73,38 +93,13 @@ public class MyApplication extends Application{
                     fos.flush();
                 }
                 fos.close();
+
                 is.close();
             } catch (IOException e) {
                 e.printStackTrace();
                 System.exit(0);
-            } }
-        return new CityDB(this, path);
-    }
-
-    private void initCityList(){
-        mCityList = new ArrayList<City>();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                prepareCityList();
             }
-        }).start();
-    }
-
-    private boolean prepareCityList() {
-        mCityList = mCityDB.getAllCity();
-        int i;
-        for(i=0;i< mCityList.size();i++){
-            String cityName = mCityList.get(i).getCity();
-            String cityCode = mCityList.get(i).getNumber();
-            Log.d(TAG,cityCode+":"+cityName);
         }
-        Log.d(TAG,"i="+i);
-        return true;
-    }
-
-    public List<City> getCityList() {
-        return mCityList;
+        return new CityDB(this, path);
     }
 }
